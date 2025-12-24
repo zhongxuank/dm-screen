@@ -1,0 +1,38 @@
+My idea for this project is to build a digital, web-based Dungeon Master screen that can be customisable, simple, functional, and exportable. It should be something I can simply make functionable using Github pages. The basic functions should be as follows:
+
+# Overall Functions
+
+The DM Screen should have two modes - Normal and Edit mode. In Edit mode, users can add a few kinds of objects / boxes to the screen, each with their own functions. They should also be able to resize the screen as well, zooming in as needed. In Normal mode, users can then make use of these functions as needed, such as toggling trackers, changing numbers, etc.
+
+The users should also be able to export the screen as a json file / a txt file of some kind. This should be able to save the DM screen state as it is, and when imported, it can help to recreate the screen as is.
+
+# Layout Options
+
+The layout should be in a grid format, allowing users to resize the boxes as needed to fit within those grids. We can try a default grid size of 30 grids across. Users should be able to drag boxes around (maybe like a window-style format where each box has a top bar) and should be able to resize them by dragging the bottom right corner.
+
+Additionally, all boxes should have the ability to give basic formating like colour of text box, etc.
+
+We should also be able to clone existing boxes in Edit mode. This includes full containers (e.g. Characters)
+
+# Types of objects
+
+Users should be given a basic list of objects to be added in Edit mode. Here is a list of objects and a brief description of their functionality.
+- Text: should be able to store text as is, with basic Markdown formatting options. In general, the text should wrap, and it should ideally not be able to go past the size of the box.
+- Pages: Similar to above, but there is the option to add more pages so they can flip through more things as needed.
+- To-Dos: Something like a to-do list - a toggle list where users can mark items as done or undone.
+- Countdowns: A number that they can either edit with by changing (scroll / type) or with a + / - symbol. Should also include a section for a title.
+- Fractions: A number that has too parts - a Current Number and a Max Number. Use cases could be for Hit Points, Mana Points, etc.
+- Toggles: Similar to number tracker, but the instead of a number, it can be expressed as a number of toggle circles / boxes that the DM can check and uncheck.
+- Characters: A container object that the user can use to add the same functions as above into a container that can be moved as a unit. Should come with an optional Name and Icon label, where users can select a colour and number to easily differentiate between NPCs.
+- Image: Can be used to add an image to the screen, right now keep the function to using public URLs to pull images, and allow them to scale up or down / crop to the box.
+- Notepad: Like a text pad, but no markdown formatting, and should be typable in Normal mode.
+
+# Export and Import ability
+
+Make sure that we design a data object that can store these options and layout in an expotable way, and let users download it easily. Then, we can allow users to import similar layouts to recreate the DM screens. When exporting, allow users to either export with current state (i.e. with toggles toggled and numbers reduced) or in clean state (with editable things set to the default state).
+
+# Misc notes
+
+Let's develop this in Dark mode first, good to begin by proposing a few good colour options as basic panel colour options.
+
+Help to propose more functions when developing this tool, as well as a robust set of test cases as needed.
