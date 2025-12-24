@@ -1,0 +1,110 @@
+/* App Layout */
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Controls Bar */
+.controls-bar {
+  background-color: var(--bg-secondary);
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+/* Mode Toggle */
+.mode-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mode-button {
+  padding: 0.5rem 1rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mode-button:hover {
+  background-color: var(--bg-panel-charcoal);
+}
+
+.mode-button.active {
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+/* Grid Size Controls */
+.grid-size-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.grid-size-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.grid-size-controls input[type='range'] {
+  width: 200px;
+}
+
+.grid-size-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.grid-size-buttons button {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.grid-size-buttons button:hover {
+  background-color: var(--bg-panel-charcoal);
+}
+
+/* Zoom Controls */
+.zoom-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.zoom-controls button {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  min-width: 2rem;
+}
+
+.zoom-controls button:hover {
+  background-color: var(--bg-panel-charcoal);
+}
+
+.zoom-controls span {
+  min-width: 3rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
