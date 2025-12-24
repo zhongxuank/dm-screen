@@ -39,9 +39,10 @@ export function useDragAndDrop(widgetId: string) {
       const gridDeltaX = deltaX / baseGridUnit / zoom
       const gridDeltaY = deltaY / baseGridUnit / zoom
 
+      // Snap to grid
       const newPosition = {
-        x: widgetStartPosRef.current.x + gridDeltaX,
-        y: widgetStartPosRef.current.y + gridDeltaY,
+        x: Math.round(widgetStartPosRef.current.x + gridDeltaX),
+        y: Math.round(widgetStartPosRef.current.y + gridDeltaY),
       }
 
       // Ensure positions are non-negative (top-left anchor)

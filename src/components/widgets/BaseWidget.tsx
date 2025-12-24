@@ -1,6 +1,5 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState, useRef, useEffect } from 'react'
 import { useScreenStore } from '@/store/screenStore'
-import { gridToPixels } from '@/utils/grid'
 import { useDragAndDrop } from '@/hooks/useDragAndDrop'
 import { useResize } from '@/hooks/useResize'
 import type { Widget } from '@/types'
@@ -8,12 +7,15 @@ import type { Widget } from '@/types'
 interface BaseWidgetProps {
   widget: Widget
   children: ReactNode
+  onEdit?: () => void
 }
 
-export function BaseWidget({ widget, children }: BaseWidgetProps) {
+export function BaseWidget({ widget, children, onEdit }: BaseWidgetProps) {
   const { mode, gridSize, zoom, deleteWidget, cloneWidget } = useScreenStore()
   const { dragHandlers } = useDragAndDrop(widget.id)
   const { resizeHandlers } = useResize(widget.id)
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   const isEditMode = mode === 'edit'
 
@@ -28,11 +30,37 @@ export function BaseWidget({ widget, children }: BaseWidgetProps) {
     if (confirm('Delete this widget?')) {
       deleteWidget(widget.id)
     }
+    setShowMenu(false)
   }
 
   const handleClone = () => {
     cloneWidget(widget.id)
+    setShowMenu(false)
   }
+
+  const handleEdit = () => {
+    if (onEdit) {
+      onEdit()
+    }
+    setShowMenu(false)
+  }
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false)
+      }
+    }
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showMenu])
 
   return (
     <div
@@ -48,53 +76,168 @@ export function BaseWidget({ widget, children }: BaseWidgetProps) {
         border: `${widget.style.borderWidth}px solid ${widget.style.borderColor}`,
         borderRadius: `${widget.style.borderRadius}px`,
         zIndex: widget.zIndex,
-        padding: '0.5rem',
+        display: 'flex',
+        flexDirection: 'column',
         overflow: 'hidden',
       }}
     >
-      {isEditMode && (
-        <>
-          <div
-            className="widget-header"
-            {...dragHandlers}
-            style={{ cursor: 'move' }}
-          >
-            <div className="widget-drag-handle">⋮⋮</div>
-            <div className="widget-title">{widget.type}</div>
-            <div className="widget-actions">
-              <button
-                className="widget-button clone"
-                onClick={handleClone}
-                aria-label="Clone widget"
+      {/* Permanent thin header bar */}
+      <div
+        className={`widget-header ${isEditMode ? 'editable' : ''}`}
+        {...(isEditMode ? dragHandlers : {})}
+        style={{
+          height: '24px',
+          minHeight: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 0.5rem',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          borderBottom: `1px solid ${widget.style.borderColor}`,
+          cursor: isEditMode ? 'move' : 'default',
+          userSelect: 'none',
+        }}
+      >
+        <div
+          className="widget-title"
+          style={{
+            fontSize: '0.7rem',
+            textTransform: 'uppercase',
+            color: widget.style.textColor,
+            opacity: 0.7,
+            flex: 1,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {widget.type}
+        </div>
+        {isEditMode && (
+          <div className="widget-menu-container" ref={menuRef}>
+            <button
+              className="widget-menu-button"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowMenu(!showMenu)
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: widget.style.textColor,
+                cursor: 'pointer',
+                padding: '0.25rem',
+                fontSize: '1rem',
+                opacity: 0.7,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              aria-label="Widget options"
+            >
+              ⋮
+            </button>
+            {showMenu && (
+              <div
+                className="widget-menu"
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 4px)',
+                  right: 0,
+                  backgroundColor: widget.style.backgroundColor,
+                  border: `1px solid ${widget.style.borderColor}`,
+                  borderRadius: '4px',
+                  padding: '0.25rem 0',
+                  minWidth: '120px',
+                  zIndex: 10000,
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                }}
               >
-                📋
-              </button>
-              <button
-                className="widget-button delete"
-                onClick={handleDelete}
-                aria-label="Delete widget"
-              >
-                ×
-              </button>
-            </div>
+                {onEdit && (
+                  <button
+                    className="menu-item"
+                    onClick={handleEdit}
+                    style={{
+                      width: '100%',
+                      padding: '0.5rem',
+                      background: 'none',
+                      border: 'none',
+                      color: widget.style.textColor,
+                      cursor: 'pointer',
+                      textAlign: 'left',
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    ✏️ Edit
+                  </button>
+                )}
+                <button
+                  className="menu-item"
+                  onClick={handleClone}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: 'none',
+                    border: 'none',
+                    color: widget.style.textColor,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  📋 Clone
+                </button>
+                <button
+                  className="menu-item"
+                  onClick={handleDelete}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem',
+                    background: 'none',
+                    border: 'none',
+                    color: '#f87171',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    fontSize: '0.875rem',
+                  }}
+                >
+                  🗑️ Delete
+                </button>
+              </div>
+            )}
           </div>
-          <div
-            className="widget-resize-handle"
-            {...resizeHandlers}
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '20px',
-              height: '20px',
-              cursor: 'nwse-resize',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            }}
-          />
-        </>
+        )}
+      </div>
+
+      {/* Widget content */}
+      <div
+        className="widget-content"
+        style={{
+          flex: 1,
+          overflow: 'auto',
+          padding: '0.375rem',
+        }}
+      >
+        {children}
+      </div>
+
+      {/* Resize handle (Edit mode only) */}
+      {isEditMode && (
+        <div
+          className="widget-resize-handle"
+          {...resizeHandlers}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '16px',
+            height: '16px',
+            cursor: 'nwse-resize',
+            backgroundColor: widget.style.borderColor,
+            opacity: 0.5,
+            borderRadius: '0 0 4px 0',
+          }}
+        />
       )}
-      <div className="widget-content">{children}</div>
     </div>
   )
 }
-

@@ -43,14 +43,15 @@ export function useResize(widgetId: string) {
       const gridDeltaX = deltaX / baseGridUnit / zoom
       const gridDeltaY = deltaY / baseGridUnit / zoom
 
+      // Snap to grid
       const newSize = {
         width: Math.max(
           MIN_SIZE,
-          widgetStartSizeRef.current.width + gridDeltaX
+          Math.round(widgetStartSizeRef.current.width + gridDeltaX)
         ),
         height: Math.max(
           MIN_SIZE,
-          widgetStartSizeRef.current.height + gridDeltaY
+          Math.round(widgetStartSizeRef.current.height + gridDeltaY)
         ),
       }
 

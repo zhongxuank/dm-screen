@@ -293,50 +293,25 @@
 }
 
 .widget-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  user-select: none;
+  position: relative;
 }
 
-.widget-drag-handle {
-  cursor: move;
-  font-size: 1.2rem;
-  color: var(--text-secondary);
+.widget-header.editable:hover {
+  opacity: 0.9;
 }
 
-.widget-title {
-  flex: 1;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  color: var(--text-secondary);
+.widget-menu-container {
+  position: relative;
 }
 
-.widget-actions {
-  display: flex;
-  gap: 0.25rem;
+.widget-menu-button:hover {
+  opacity: 1 !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
 
-.widget-button {
-  background: none;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  padding: 0.25rem;
-  font-size: 1rem;
-  transition: color 0.2s;
-}
-
-.widget-button:hover {
-  color: var(--text-primary);
-}
-
-.widget-button.delete:hover {
-  color: var(--accent-red);
+.menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .widget-content {
