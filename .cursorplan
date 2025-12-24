@@ -18,256 +18,268 @@ Build a web-based, customizable Dungeon Master screen with drag-and-drop widgets
 
 ## Phase 1: Foundation & Setup
 
-### 1.1 Project Initialization
+### 1.1 Project Initialization ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen`
 
-- [ ] Initialize Vite project with React + TypeScript template
-- [ ] Install core dependencies: zustand, @dnd-kit/core, react-markdown, marked
-- [ ] Install dev dependencies: @types packages, ESLint, Prettier
-- [ ] Configure TypeScript (tsconfig.json)
-- [ ] Set up ESLint and Prettier configs
-- [ ] Create folder structure (components, hooks, store, utils, types, styles)
-- [ ] Create GitHub Actions workflow for Pages deployment
-- [ ] Update vite.config.ts with base path for GitHub Pages
+- [x] Initialize Vite project with React + TypeScript template
+- [x] Install core dependencies: zustand, @dnd-kit/core, react-markdown, marked
+- [x] Install dev dependencies: @types packages, ESLint, Prettier
+- [x] Configure TypeScript (tsconfig.json)
+- [x] Set up ESLint and Prettier configs
+- [x] Create folder structure (components, hooks, store, utils, types, styles)
+- [x] Create GitHub Actions workflow for Pages deployment
+- [x] Update vite.config.ts with base path for GitHub Pages
 
-### 1.2 Type Definitions & Data Structures
+### 1.2 Type Definitions & Data Structures ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/types`
 
-- [ ] Create `src/types/index.ts` with all TypeScript interfaces:
-  - [ ] DMScreen interface
-  - [ ] Widget interface
-  - [ ] WidgetType union type
-  - [ ] WidgetStyle interface
-  - [ ] WidgetData types for each widget
-  - [ ] Theme interface
-  - [ ] Viewport interface
+- [x] Create `src/types/index.ts` with all TypeScript interfaces:
+  - [x] DMScreen interface
+  - [x] Widget interface
+  - [x] WidgetType union type
+  - [x] WidgetStyle interface
+  - [x] WidgetData types for each widget
+  - [x] Theme interface
+  - [x] Viewport interface
 
-### 1.3 State Management Setup
+### 1.3 State Management Setup ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/store`
 
-- [ ] Create `src/store/screenStore.ts` with Zustand store:
-  - [ ] Screen state (gridSize, zoom, mode, viewport, canvasSize)
-  - [ ] Widgets array
-  - [ ] Theme settings
-  - [ ] Actions: setGridSize, setZoom, setMode, setViewport, addWidget, updateWidget, deleteWidget
-  - [ ] Persist to localStorage
+- [x] Create `src/store/screenStore.ts` with Zustand store:
+  - [x] Screen state (gridSize, zoom, mode, viewport, canvasSize)
+  - [x] Widgets array
+  - [x] Theme settings
+  - [x] Actions: setGridSize, setZoom, setMode, setViewport, addWidget, updateWidget, deleteWidget
+  - [x] Persist to localStorage
 
-### 1.4 Grid System Utilities
+### 1.4 Grid System Utilities ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/utils`
 
-- [ ] Create `src/utils/grid.ts`:
-  - [ ] Constants: DEFAULT_GRID_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE
-  - [ ] getGridUnitSize() function
-  - [ ] pixelsToGrid() function
-  - [ ] gridToPixels() function
-  - [ ] snapToGrid() function
-  - [ ] adjustWidgetPositionForGridChange() function
-  - [ ] calculateCanvasBounds() function
+- [x] Create `src/utils/grid.ts`:
+  - [x] Constants: DEFAULT_GRID_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE
+  - [x] getGridUnitSize() function
+  - [x] pixelsToGrid() function
+  - [x] gridToPixels() function
+  - [x] snapToGrid() function
+  - [x] adjustWidgetPositionForGridChange() function
+  - [x] calculateCanvasBounds() function
 
-### 1.5 Theme System
+### 1.5 Theme System ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/styles`
 
-- [ ] Create `src/styles/theme.css`:
-  - [ ] CSS variables for dark mode colors
-  - [ ] Background colors (primary, secondary, panel variants)
-  - [ ] Text colors (primary, secondary)
-  - [ ] Accent colors (blue, green, yellow, red)
-  - [ ] Grid size variable
-- [ ] Create `src/styles/components.css` for base component styles
+- [x] Create `src/styles/theme.css`:
+  - [x] CSS variables for dark mode colors
+  - [x] Background colors (primary, secondary, panel variants)
+  - [x] Text colors (primary, secondary)
+  - [x] Accent colors (blue, green, yellow, red)
+  - [x] Grid size variable
+- [x] Create `src/styles/components.css` for base component styles
 
-### 1.6 Main Layout Component
+### 1.6 Main Layout Component ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/common`
 
-- [ ] Create `src/components/common/GridContainer.tsx`:
-  - [ ] Infinite scrolling canvas container
-  - [ ] Viewport state management
-  - [ ] Mouse drag panning (Alt+Click or middle mouse)
-  - [ ] Wheel scrolling support
-  - [ ] Grid overlay rendering
-  - [ ] Dynamic canvas sizing based on widgets
-  - [ ] Transform/translate for viewport positioning
+- [x] Create `src/components/common/GridContainer.tsx`:
+  - [x] Infinite scrolling canvas container
+  - [x] Viewport state management
+  - [x] Mouse drag panning (Alt+Click or middle mouse)
+  - [x] Wheel scrolling support
+  - [x] Grid overlay rendering
+  - [x] Dynamic canvas sizing based on widgets
+  - [x] Transform/translate for viewport positioning
+  - [x] Top-left anchor constraint (only scroll down/right)
 
-### 1.7 Grid Size Controls
+### 1.7 Grid Size Controls ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/common`
 
-- [ ] Create `src/components/common/GridSizeControls.tsx`:
-  - [ ] Slider input for grid size (10-100)
-  - [ ] +/- buttons for quick adjustment
-  - [ ] Display current grid size
-  - [ ] Handle grid size changes (preserve widget positions)
+- [x] Create `src/components/common/GridSizeControls.tsx`:
+  - [x] Slider input for grid size (10-100)
+  - [x] +/- buttons for quick adjustment
+  - [x] Display current grid size
+  - [x] Handle grid size changes (preserve widget positions)
 
-### 1.8 Mode Toggle
+### 1.8 Mode Toggle ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/common`
 
-- [ ] Create `src/components/common/ModeToggle.tsx`:
-  - [ ] Toggle button between 'normal' and 'edit' modes
-  - [ ] Visual indicator of current mode
-  - [ ] Update store on mode change
+- [x] Create `src/components/common/ModeToggle.tsx`:
+  - [x] Toggle button between 'normal' and 'edit' modes
+  - [x] Visual indicator of current mode
+  - [x] Update store on mode change
 
-### 1.9 Zoom Controls
+### 1.9 Zoom Controls ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/common`
 
-- [ ] Create `src/components/common/ZoomControls.tsx`:
-  - [ ] Zoom in button
-  - [ ] Zoom out button
-  - [ ] Reset zoom button
-  - [ ] Display current zoom level
-  - [ ] Handle zoom limits (e.g., 0.5x to 2x)
+- [x] Create `src/components/common/ZoomControls.tsx`:
+  - [x] Zoom in button
+  - [x] Zoom out button
+  - [x] Reset zoom button
+  - [x] Display current zoom level
+  - [x] Handle zoom limits (e.g., 0.5x to 2x)
 
-### 1.10 Base Widget Component
+### 1.10 Base Widget Component ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/BaseWidget.tsx`:
-  - [ ] Widget container with positioning (grid-based, top-left anchor)
-  - [ ] Drag handle (visible in Edit mode only)
-  - [ ] Resize handle (bottom-right corner, Edit mode only)
-  - [ ] Selection border/indicator
-  - [ ] Delete button (Edit mode)
-  - [ ] Clone button (Edit mode)
-  - [ ] Style props (backgroundColor, textColor, border, etc.)
-  - [ ] z-index management
+- [x] Create `src/components/widgets/BaseWidget.tsx`:
+  - [x] Widget container with positioning (grid-based, top-left anchor)
+  - [x] Permanent thin header bar (half grid size)
+  - [x] Three-dots menu (horizontal ⋯) for Edit/Clone/Delete
+  - [x] Drag handle (entire header in Edit mode)
+  - [x] Resize handle (bottom-right corner, Edit mode only)
+  - [x] Style props (backgroundColor, textColor, border, etc.)
+  - [x] z-index management
+  - [x] Grid snapping for drag and resize
 
-### 1.11 Drag & Drop Hook
+### 1.11 Drag & Drop Hook ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/hooks`
 
-- [ ] Create `src/hooks/useDragAndDrop.ts`:
-  - [ ] Integrate @dnd-kit/core
-  - [ ] Handle drag start/end events
-  - [ ] Convert pixel positions to grid coordinates
-  - [ ] Snap to grid on drop
-  - [ ] Update widget position in store
-  - [ ] Disable in Normal mode
+- [x] Create `src/hooks/useDragAndDrop.ts`:
+  - [x] Handle drag start/end events (custom implementation)
+  - [x] Convert pixel positions to grid coordinates
+  - [x] Snap to grid (round to nearest grid unit)
+  - [x] Update widget position in store
+  - [x] Disable in Normal mode
+  - [x] Top-left anchor constraint
 
-### 1.12 Resize Hook
+### 1.12 Resize Hook ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/hooks`
 
-- [ ] Create `src/hooks/useResize.ts`:
-  - [ ] Handle mouse down on resize handle
-  - [ ] Track mouse movement
-  - [ ] Calculate new size in grid units
-  - [ ] Snap to grid
-  - [ ] Enforce minimum size
-  - [ ] Update widget size in store
+- [x] Create `src/hooks/useResize.ts`:
+  - [x] Handle mouse down on resize handle
+  - [x] Track mouse movement
+  - [x] Calculate new size in grid units
+  - [x] Snap to grid (round to nearest grid unit)
+  - [x] Enforce minimum size (2 grid units)
+  - [x] Update widget size in store
 
-### 1.13 Main App Component
+### 1.13 Main App Component ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src`
 
-- [ ] Create `src/App.tsx`:
-  - [ ] Render GridContainer
-  - [ ] Render ModeToggle
-  - [ ] Render GridSizeControls
-  - [ ] Render ZoomControls
-  - [ ] Render widgets from store
-  - [ ] Apply theme styles
+- [x] Create `src/App.tsx`:
+  - [x] Render GridContainer
+  - [x] Render ModeToggle
+  - [x] Render GridSizeControls
+  - [x] Render ZoomControls
+  - [x] Render WidgetToolbar
+  - [x] Render widgets from store via WidgetFactory
+  - [x] Apply theme styles
 
-### 1.14 Entry Point
+### 1.14 Entry Point ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src`
 
-- [ ] Update `src/main.tsx`:
-  - [ ] Import App component
-  - [ ] Import theme CSS
-  - [ ] Render App to DOM
-  - [ ] Set up error boundaries
+- [x] Update `src/main.tsx`:
+  - [x] Import App component
+  - [x] Import theme CSS
+  - [x] Render App to DOM
+  - [x] Set up error boundaries
 
 ---
 
 ## Phase 2: Widget Implementation
 
-### 2.1 Text Widget
+### 2.1 Text Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/TextWidget.tsx`:
-  - [ ] Markdown rendering with react-markdown
-  - [ ] Text wrapping within widget bounds
-  - [ ] Edit mode: markdown editor (textarea with preview)
-  - [ ] Normal mode: read-only display
-  - [ ] Widget data type: { content: string }
+- [x] Create `src/components/widgets/TextWidget.tsx`:
+  - [x] Markdown rendering with react-markdown
+  - [x] Text wrapping within widget bounds
+  - [x] Edit mode: markdown editor (textarea)
+  - [x] Normal mode: read-only display
+  - [x] Widget data type: { content: string }
+  - [x] Default size: 10x8 grid units
 
-### 2.2 Notepad Widget
+### 2.2 Notepad Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/NotepadWidget.tsx`:
-  - [ ] Plain text textarea (editable in Normal mode)
-  - [ ] Auto-save to store on change
-  - [ ] Edit mode: styling options
-  - [ ] Widget data type: { content: string }
+- [x] Create `src/components/widgets/NotepadWidget.tsx`:
+  - [x] Plain text textarea (editable in Normal mode)
+  - [x] Auto-save to store on change
+  - [x] Edit mode: disabled for editing
+  - [x] Widget data type: { content: string }
+  - [x] Default size: 10x8 grid units
 
-### 2.3 Image Widget
+### 2.3 Image Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/ImageWidget.tsx`:
-  - [ ] Edit mode: URL input field
-  - [ ] Image loading and display
-  - [ ] Error handling for invalid URLs (placeholder)
-  - [ ] Scale/crop controls (if time permits)
-  - [ ] Widget data type: { url: string, scale?: number }
+- [x] Create `src/components/widgets/ImageWidget.tsx`:
+  - [x] Edit mode: URL input field with preview
+  - [x] Image loading and display
+  - [x] Error handling for invalid URLs (placeholder)
+  - [x] Widget data type: { url: string, scale?: number }
+  - [x] Default size: 10x8 grid units
 
-### 2.4 Countdown Widget
+### 2.4 Countdown Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/CountdownWidget.tsx`:
-  - [ ] Number display
-  - [ ] +/- buttons for increment/decrement
-  - [ ] Number input (type to edit)
-  - [ ] Mouse wheel scroll support
-  - [ ] Title field display
-  - [ ] Edit mode: configure title, default value, min/max
-  - [ ] Widget data type: { title: string, value: number, min?: number, max?: number }
+- [x] Create `src/components/widgets/CountdownWidget.tsx`:
+  - [x] Number display
+  - [x] +/- buttons for increment/decrement
+  - [x] Number input (type to edit)
+  - [x] Mouse wheel scroll support
+  - [x] Title field display
+  - [x] Edit mode: configure title, default value, min/max
+  - [x] Widget data type: { title: string, value: number, min?: number, max?: number }
+  - [x] Default size: 6x5 grid units
 
-### 2.5 Fraction Widget
+### 2.5 Fraction Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/FractionWidget.tsx`:
-  - [ ] Current/Max number display (e.g., "45/60")
-  - [ ] +/- buttons for current value
-  - [ ] Edit mode: configure title, max value
-  - [ ] Prevent current > max
-  - [ ] Widget data type: { title: string, current: number, max: number }
+- [x] Create `src/components/widgets/FractionWidget.tsx`:
+  - [x] Current/Max number display (e.g., "45/60")
+  - [x] +/- buttons for current value
+  - [x] Edit mode: configure title, max value
+  - [x] Prevent current > max
+  - [x] Mouse wheel scroll support
+  - [x] Widget data type: { title: string, current: number, max: number }
+  - [x] Default size: 6x5 grid units
 
-### 2.6 Toggles Widget
+### 2.6 Toggles Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/TogglesWidget.tsx`:
-  - [ ] Configurable number of toggle circles/boxes
-  - [ ] Click to toggle on/off
-  - [ ] Visual feedback for checked state
-  - [ ] Edit mode: set count, style (circles vs boxes)
-  - [ ] Widget data type: { count: number, toggles: boolean[], style: 'circle' | 'box' }
+- [x] Create `src/components/widgets/TogglesWidget.tsx`:
+  - [x] Configurable number of toggle circles/boxes
+  - [x] Click to toggle on/off
+  - [x] Visual feedback for checked state
+  - [x] Edit mode: set count, style (circles vs boxes)
+  - [x] Responsive sizing (scales to fit container)
+  - [x] Widget data type: { count: number, toggles: boolean[], style: 'circle' | 'box' }
+  - [x] Default size: 8x6 grid units
 
-### 2.7 To-Dos Widget
+### 2.7 To-Dos Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/TodosWidget.tsx`:
-  - [ ] List of todo items
-  - [ ] Checkbox for each item
-  - [ ] Strikethrough for completed items
-  - [ ] Edit mode: add/remove items, edit text
-  - [ ] Normal mode: toggle completion only
-  - [ ] Widget data type: { items: Array<{ id: string, text: string, completed: boolean }> }
+- [x] Create `src/components/widgets/TodosWidget.tsx`:
+  - [x] List of todo items
+  - [x] Checkbox for each item
+  - [x] Strikethrough for completed items
+  - [x] Edit mode: add/remove items, edit text
+  - [x] Normal mode: toggle completion only
+  - [x] Widget data type: { items: Array<{ id: string, text: string, completed: boolean }> }
+  - [x] Default size: 10x8 grid units
 
-### 2.8 Pages Widget
+### 2.8 Pages Widget ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/PagesWidget.tsx`:
-  - [ ] Multiple markdown pages
-  - [ ] Page navigation (prev/next buttons)
-  - [ ] Page indicator (e.g., "Page 2 of 5")
-  - [ ] Edit mode: add/remove pages, edit content
-  - [ ] Normal mode: navigate pages only
-  - [ ] Widget data type: { pages: Array<{ id: string, content: string }>, currentPage: number }
+- [x] Create `src/components/widgets/PagesWidget.tsx`:
+  - [x] Multiple markdown pages
+  - [x] Page navigation (prev/next buttons)
+  - [x] Page indicator (e.g., "Page 2 of 5")
+  - [x] Edit mode: add/remove pages, edit content
+  - [x] Normal mode: navigate pages only
+  - [x] Widget data type: { pages: Array<{ id: string, content: string }>, currentPage: number }
+  - [x] Default size: 10x8 grid units
 
-### 2.9 Character Widget (Container)
+### 2.9 Character Widget (Container) ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
 
-- [ ] Create `src/components/widgets/CharacterWidget.tsx`:
-  - [ ] Container with name and icon label
-  - [ ] Color picker for icon background
-  - [ ] Number badge option
-  - [ ] Nested widgets support (render widgets inside)
-  - [ ] Collapse/expand functionality
-  - [ ] Move as unit (all nested widgets move together)
-  - [ ] Edit mode: add/remove nested widgets
-  - [ ] Widget data type: { name: string, iconColor: string, iconNumber?: number, widgets: Widget[], collapsed: boolean }
+- [x] Create `src/components/widgets/CharacterWidget.tsx`:
+  - [x] Container with name and icon label
+  - [x] Color picker for icon background
+  - [x] Number badge option
+  - [x] Nested widgets support (render widgets inside)
+  - [x] Collapse/expand functionality
+  - [x] Move as unit (all nested widgets move together)
+  - [x] Edit mode: add/remove nested widgets
+  - [x] Widget data type: { name: string, iconColor: string, iconNumber?: number, widgets: Widget[], collapsed: boolean }
+  - [x] Default size: 12x10 grid units
 
 ### 2.10 Widget Factory
 **Source**: `/Users/xuan/dm-screen/src/components/widgets`
@@ -290,25 +302,25 @@ Build a web-based, customizable Dungeon Master screen with drag-and-drop widgets
   - [ ] Position: sidebar or floating panel
   - [ ] Visual feedback on hover
 
-### 3.2 Widget Creation
+### 3.2 Widget Creation ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/store`
 
-- [ ] Add createWidget action to store:
-  - [ ] Generate unique ID
-  - [ ] Set default position (center or next available)
-  - [ ] Set default size
-  - [ ] Initialize widget data with defaults
-  - [ ] Add to widgets array
+- [x] Add createWidget action to store (via widgetFactory):
+  - [x] Generate unique ID
+  - [x] Set default position (near top-left)
+  - [x] Set default size (optimized per widget type)
+  - [x] Initialize widget data with defaults
+  - [x] Add to widgets array
 
-### 3.3 Widget Cloning
+### 3.3 Widget Cloning ✅ COMPLETE
 **Source**: `/Users/xuan/dm-screen/src/store`
 
-- [ ] Add cloneWidget action to store:
-  - [ ] Deep copy widget
-  - [ ] Generate new ID
-  - [ ] Offset position slightly
-  - [ ] Handle nested widgets in Character widgets
-  - [ ] Add cloned widget to array
+- [x] Add cloneWidget action to store:
+  - [x] Deep copy widget
+  - [x] Generate new ID
+  - [x] Offset position slightly (2 grid units)
+  - [x] Handle nested widgets in Character widgets
+  - [x] Add cloned widget to array
 
 ### 3.4 Style Editor
 **Source**: `/Users/xuan/dm-screen/src/components/common`
