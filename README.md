@@ -9,7 +9,9 @@ A customizable, web-based Dungeon Master screen for tabletop RPGs. Build your pe
 
 ### 🎯 Core Functionality
 - **Dual Modes**: Switch between Edit mode (customize) and Normal mode (play)
-- **Grid-Based Layout**: 30-column grid system for precise widget placement
+- **Adjustable Grid System**: Customize grid size (default: 30 columns) to fit your needs
+- **Infinite Canvas**: Scroll endlessly in any direction - no boundaries
+- **Top-Left Anchor**: Coordinate system anchored to top-left (0,0) - widgets stay positioned when grid size changes
 - **Drag & Drop**: Intuitive window-style dragging with resize handles
 - **Export/Import**: Save and load your custom screens as JSON files
 - **Dark Mode**: Beautiful dark theme optimized for low-light gaming sessions
@@ -27,11 +29,13 @@ A customizable, web-based Dungeon Master screen for tabletop RPGs. Build your pe
 9. **Notepad** - Plain text editor for quick notes during play
 
 ### 🎨 Customization
+- **Adjustable Grid Size**: Increase or decrease grid columns (10-100 range)
+- **Infinite Scrolling**: Pan and scroll the canvas endlessly in any direction
 - Customizable widget colors (background, text, borders)
 - Adjustable border radius and width
 - Clone widgets for quick duplication
 - Zoom controls for better visibility
-- Responsive grid snapping
+- Responsive grid snapping with top-left anchor preservation
 
 ## Getting Started
 

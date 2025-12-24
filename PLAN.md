@@ -27,9 +27,11 @@ A web-based, customizable Dungeon Master screen with drag-and-drop functionality
 ```typescript
 interface DMScreen {
   version: string;
-  gridSize: number; // default: 30
+  gridSize: number; // default: 30, user-adjustable
   zoom: number; // default: 1
   mode: 'normal' | 'edit';
+  viewport: { x: number; y: number }; // scroll position (pixels)
+  canvasSize: { width: number; height: number }; // grid units (infinite)
   widgets: Widget[];
   theme: Theme;
 }
@@ -37,7 +39,7 @@ interface DMScreen {
 interface Widget {
   id: string;
   type: WidgetType;
-  position: { x: number; y: number }; // grid coordinates
+  position: { x: number; y: number }; // grid coordinates (top-left anchor, 0,0 = top-left)
   size: { width: number; height: number }; // grid units
   style: WidgetStyle;
   data: WidgetData;
@@ -80,18 +82,22 @@ interface WidgetStyle {
 #### 1.2 Basic UI Framework
 - [ ] Create dark mode theme system
 - [ ] Design color palette (3-5 panel color options)
-- [ ] Build main layout container
-- [ ] Implement grid system (30 columns)
+- [ ] Build main layout container with infinite scroll canvas
+- [ ] Implement grid system (default: 30 columns, user-adjustable)
+- [ ] Implement coordinate system (top-left anchor at 0,0)
+- [ ] Add grid size adjustment controls
 - [ ] Create mode toggle (Normal/Edit)
 - [ ] Add zoom controls
+- [ ] Implement infinite scrolling viewport
 
 #### 1.3 Core Widget System
 - [ ] Create base Widget component
-- [ ] Implement widget positioning system (grid-based)
+- [ ] Implement widget positioning system (grid-based, top-left anchor)
 - [ ] Build widget container with drag handle
 - [ ] Implement resize handles (bottom-right corner)
 - [ ] Add z-index management
 - [ ] Create widget selection system
+- [ ] Implement grid size change handler (preserve top-left positions)
 
 ### Phase 2: Widget Implementation (Week 2-3)
 **Goal**: Implement all widget types with full functionality
@@ -174,6 +180,10 @@ interface WidgetStyle {
 #### 3.3 Layout Management
 - [ ] Grid snap system
 - [ ] Widget alignment helpers
+- [ ] Grid size adjustment UI (increase/decrease columns)
+- [ ] Grid size change handler (anchor widgets to top-left)
+- [ ] Infinite canvas scrolling
+- [ ] Viewport position tracking
 - [ ] Undo/redo functionality
 - [ ] Clear all widgets option
 
@@ -261,8 +271,7 @@ interface WidgetStyle {
 4. **Print Mode**: Optimized layout for printing
 5. **Keyboard Shortcuts**: Quick actions
 6. **Widget Groups**: Select and move multiple widgets
-7. **Grid Customization**: Adjustable grid size
-8. **Fullscreen Mode**: Hide browser UI
+7. **Fullscreen Mode**: Hide browser UI
 9. **Widget Animations**: Visual feedback
 10. **Search Function**: Find text across widgets
 

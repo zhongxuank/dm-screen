@@ -99,30 +99,300 @@ Create `src/styles/theme.css`:
 
 Create `src/utils/grid.ts`:
 ```typescript
-export const GRID_SIZE = 30;
+// Grid system with adjustable size and infinite canvas
+// Top-left corner (0,0) is the anchor point
 
-export function pixelsToGrid(pixels: number, zoom: number = 1): number {
-  const gridUnit = window.innerWidth / GRID_SIZE;
-  return Math.round(pixels / gridUnit / zoom);
+export const DEFAULT_GRID_SIZE = 30;
+export const MIN_GRID_SIZE = 10;
+export const MAX_GRID_SIZE = 100;
+
+export interface GridConfig {
+  size: number; // Number of columns (default: 30)
+  zoom: number; // Zoom level (default: 1)
 }
 
-export function gridToPixels(gridUnits: number, zoom: number = 1): number {
-  const gridUnit = window.innerWidth / GRID_SIZE;
-  return gridUnits * gridUnit * zoom;
+export interface Viewport {
+  x: number; // Scroll position X (pixels)
+  y: number; // Scroll position Y (pixels)
 }
 
-export function snapToGrid(value: number, zoom: number = 1): number {
-  return pixelsToGrid(value, zoom) * gridToPixels(1, zoom);
+/**
+ * Calculate grid unit size in pixels based on viewport width
+ * Grid size determines how many columns fit across the screen
+ */
+export function getGridUnitSize(gridSize: number, zoom: number = 1): number {
+  return window.innerWidth / gridSize / zoom;
+}
+
+/**
+ * Convert pixel coordinates to grid coordinates
+ * Top-left (0,0) is the anchor point
+ */
+export function pixelsToGrid(
+  pixels: number, 
+  gridSize: number, 
+  zoom: number = 1
+): number {
+  const gridUnit = getGridUnitSize(gridSize, zoom);
+  return Math.round(pixels / gridUnit);
+}
+
+/**
+ * Convert grid coordinates to pixel coordinates
+ */
+export function gridToPixels(
+  gridUnits: number, 
+  gridSize: number, 
+  zoom: number = 1
+): number {
+  const gridUnit = getGridUnitSize(gridSize, zoom);
+  return gridUnits * gridUnit;
+}
+
+/**
+ * Snap pixel value to nearest grid line
+ */
+export function snapToGrid(
+  value: number, 
+  gridSize: number, 
+  zoom: number = 1
+): number {
+  const gridUnit = getGridUnitSize(gridSize, zoom);
+  return Math.round(value / gridUnit) * gridUnit;
+}
+
+/**
+ * When grid size changes, widget positions remain anchored to top-left
+ * This function ensures positions stay correct when grid size changes
+ */
+export function adjustWidgetPositionForGridChange(
+  oldGridSize: number,
+  newGridSize: number,
+  widgetPosition: { x: number; y: number }
+): { x: number; y: number } {
+  // Positions are already in grid coordinates, so they don't change
+  // The grid unit size changes, but widget positions stay the same
+  // because they're relative to the grid, not pixels
+  return widgetPosition;
+}
+
+/**
+ * Calculate canvas bounds based on widget positions
+ * Used for infinite scrolling
+ */
+export function calculateCanvasBounds(
+  widgets: Array<{ position: { x: number; y: number }; size: { width: number; height: number } }>,
+  gridSize: number,
+  zoom: number = 1
+): { minX: number; maxX: number; minY: number; maxY: number } {
+  if (widgets.length === 0) {
+    return { minX: 0, maxX: gridSize, minY: 0, maxY: gridSize };
+  }
+  
+  let minX = Infinity, maxX = -Infinity;
+  let minY = Infinity, maxY = -Infinity;
+  
+  widgets.forEach(widget => {
+    const x = widget.position.x;
+    const y = widget.position.y;
+    const width = widget.size.width;
+    const height = widget.size.height;
+    
+    minX = Math.min(minX, x);
+    maxX = Math.max(maxX, x + width);
+    minY = Math.min(minY, y);
+    maxY = Math.max(maxY, y + height);
+  });
+  
+  // Add padding
+  const padding = 5;
+  return {
+    minX: Math.max(0, minX - padding),
+    maxX: maxX + padding,
+    minY: Math.max(0, minY - padding),
+    maxY: maxY + padding
+  };
 }
 ```
 
-### Step 1.5: Create Main Layout Component
+### Step 1.5: Create Main Layout Component with Infinite Canvas
 
 Create `src/components/common/GridContainer.tsx`:
 ```typescript
-// Implement grid overlay
-// Handle zoom functionality
-// Provide grid context
+import { useState, useRef, useEffect } from 'react';
+import { useScreenStore } from '@/store/screenStore';
+import { gridToPixels, getGridUnitSize, calculateCanvasBounds } from '@/utils/grid';
+
+export function GridContainer({ children }: { children: React.ReactNode }) {
+  const { gridSize, zoom, viewport, setViewport, widgets } = useScreenStore();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  // Calculate canvas size based on widget positions
+  const canvasBounds = calculateCanvasBounds(widgets, gridSize, zoom);
+  const canvasWidth = gridToPixels(canvasBounds.maxX, gridSize, zoom);
+  const canvasHeight = gridToPixels(canvasBounds.maxY, gridSize, zoom);
+
+  // Handle pan/scroll with mouse drag
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1 || (e.button === 0 && e.altKey)) { // Middle mouse or Alt+Left
+      setIsDragging(true);
+      setDragStart({ x: e.clientX - viewport.x, y: e.clientY - viewport.y });
+      e.preventDefault();
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setViewport({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Handle wheel scrolling
+  const handleWheel = (e: React.WheelEvent) => {
+    if (e.shiftKey) {
+      // Horizontal scroll
+      setViewport({
+        x: viewport.x - e.deltaY,
+        y: viewport.y
+      });
+    } else {
+      // Vertical scroll
+      setViewport({
+        x: viewport.x,
+        y: viewport.y - e.deltaY
+      });
+    }
+    e.preventDefault();
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="grid-container"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      onWheel={handleWheel}
+      style={{
+        position: 'relative',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        cursor: isDragging ? 'grabbing' : 'grab'
+      }}
+    >
+      <div
+        className="canvas"
+        style={{
+          position: 'absolute',
+          width: `${canvasWidth}px`,
+          height: `${canvasHeight}px`,
+          transform: `translate(${-viewport.x}px, ${-viewport.y}px) scale(${zoom})`,
+          transformOrigin: 'top left'
+        }}
+      >
+        {/* Grid overlay */}
+        <GridOverlay gridSize={gridSize} zoom={zoom} />
+        {/* Widgets */}
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function GridOverlay({ gridSize, zoom }: { gridSize: number; zoom: number }) {
+  const gridUnit = getGridUnitSize(gridSize, zoom);
+  const gridLines = [];
+
+  // Generate grid lines (only visible ones)
+  // Optimize: only render visible grid lines based on viewport
+  for (let i = 0; i <= gridSize * 10; i++) {
+    gridLines.push(
+      <div
+        key={`v-${i}`}
+        className="grid-line vertical"
+        style={{
+          position: 'absolute',
+          left: `${i * gridUnit}px`,
+          top: 0,
+          width: '1px',
+          height: '100%',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          pointerEvents: 'none'
+        }}
+      />
+    );
+    gridLines.push(
+      <div
+        key={`h-${i}`}
+        className="grid-line horizontal"
+        style={{
+          position: 'absolute',
+          top: `${i * gridUnit}px`,
+          left: 0,
+          height: '1px',
+          width: '100%',
+          backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          pointerEvents: 'none'
+        }}
+      />
+    );
+  }
+
+  return <>{gridLines}</>;
+}
+```
+
+### Step 1.5a: Create Grid Size Controls
+
+Create `src/components/common/GridSizeControls.tsx`:
+```typescript
+import { useScreenStore } from '@/store/screenStore';
+import { MIN_GRID_SIZE, MAX_GRID_SIZE } from '@/utils/grid';
+
+export function GridSizeControls() {
+  const { gridSize, setGridSize, widgets } = useScreenStore();
+
+  const handleGridSizeChange = (newSize: number) => {
+    // Clamp to valid range
+    const clampedSize = Math.max(MIN_GRID_SIZE, Math.min(MAX_GRID_SIZE, newSize));
+    
+    // Widget positions stay the same (they're in grid coordinates)
+    // Top-left anchor is preserved automatically
+    setGridSize(clampedSize);
+  };
+
+  return (
+    <div className="grid-size-controls">
+      <label>
+        Grid Size: {gridSize} columns
+        <input
+          type="range"
+          min={MIN_GRID_SIZE}
+          max={MAX_GRID_SIZE}
+          value={gridSize}
+          onChange={(e) => handleGridSizeChange(Number(e.target.value))}
+        />
+      </label>
+      <div className="grid-size-buttons">
+        <button onClick={() => handleGridSizeChange(gridSize - 5)}>-5</button>
+        <button onClick={() => handleGridSizeChange(gridSize - 1)}>-1</button>
+        <button onClick={() => handleGridSizeChange(gridSize + 1)}>+1</button>
+        <button onClick={() => handleGridSizeChange(gridSize + 5)}>+5</button>
+      </div>
+    </div>
+  );
+}
 ```
 
 ### Step 1.6: Implement Mode Toggle

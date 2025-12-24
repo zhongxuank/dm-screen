@@ -21,7 +21,7 @@
   - **Priority**: Medium
 
 #### 1.2 Grid System
-- **TC-004**: Grid displays correctly (30 columns)
+- **TC-004**: Grid displays correctly (default: 30 columns)
   - **Steps**: Load page in Edit mode
   - **Expected**: Grid overlay shows 30 columns
   - **Priority**: High
@@ -35,6 +35,59 @@
   - **Steps**: Resize widget by dragging corner
   - **Expected**: Size increments match grid units
   - **Priority**: High
+
+- **TC-006a**: Increase grid size
+  - **Steps**: Edit mode → Increase grid size (e.g., 30 to 40)
+  - **Expected**: Grid becomes finer (more columns), widgets stay anchored to top-left
+  - **Priority**: High
+
+- **TC-006b**: Decrease grid size
+  - **Steps**: Edit mode → Decrease grid size (e.g., 30 to 20)
+  - **Expected**: Grid becomes coarser (fewer columns), widgets stay anchored to top-left
+  - **Priority**: High
+
+- **TC-006c**: Grid size change preserves widget positions (top-left anchor)
+  - **Steps**: 
+    1. Create widget at position (5, 5)
+    2. Change grid size from 30 to 50
+    3. Verify widget position
+  - **Expected**: Widget remains at grid position (5, 5), visually appears in same relative location
+  - **Priority**: High
+
+- **TC-006d**: Grid size limits enforced
+  - **Steps**: Try to set grid size below minimum or above maximum
+  - **Expected**: Grid size clamped to valid range (e.g., 10-100)
+  - **Priority**: Medium
+
+- **TC-006e**: Coordinate system uses top-left anchor (0,0)
+  - **Steps**: Create widget → Check position coordinates
+  - **Expected**: Top-left corner of screen is (0, 0), coordinates increase right/down
+  - **Priority**: High
+
+- **TC-006f**: Infinite scrolling canvas
+  - **Steps**: Scroll/pan canvas in any direction
+  - **Expected**: Canvas scrolls smoothly, no boundaries
+  - **Priority**: High
+
+- **TC-006g**: Canvas expands based on widget positions
+  - **Steps**: Place widgets far from origin → Scroll to find them
+  - **Expected**: Canvas size adjusts to accommodate all widgets
+  - **Priority**: Medium
+
+- **TC-006h**: Pan canvas with mouse drag
+  - **Steps**: Alt+Click and drag (or middle mouse button)
+  - **Expected**: Canvas pans smoothly
+  - **Priority**: Medium
+
+- **TC-006i**: Scroll canvas with mouse wheel
+  - **Steps**: Scroll mouse wheel over canvas
+  - **Expected**: Canvas scrolls vertically (or horizontally with Shift)
+  - **Priority**: Medium
+
+- **TC-006j**: Viewport position persists
+  - **Steps**: Scroll canvas → Switch modes → Return
+  - **Expected**: Viewport position maintained
+  - **Priority**: Low
 
 ### 2. Widget Creation & Management
 
@@ -94,9 +147,9 @@
   - **Expected**: Widget does not move
   - **Priority**: High
 
-- **TC-017**: Drag widget to edge of screen
-  - **Steps**: Drag widget to screen boundary
-  - **Expected**: Screen scrolls or widget stops at edge
+- **TC-017**: Drag widget beyond viewport
+  - **Steps**: Drag widget to edge of viewport and continue
+  - **Expected**: Canvas auto-scrolls or widget can be placed anywhere (infinite canvas)
   - **Priority**: Medium
 
 #### 3.2 Resize Functionality
