@@ -17,11 +17,12 @@ export function BaseWidget({ widget, children }: BaseWidgetProps) {
 
   const isEditMode = mode === 'edit'
 
-  // Convert grid position to pixels
-  const left = gridToPixels(widget.position.x, gridSize, zoom)
-  const top = gridToPixels(widget.position.y, gridSize, zoom)
-  const width = gridToPixels(widget.size.width, gridSize, zoom)
-  const height = gridToPixels(widget.size.height, gridSize, zoom)
+  // Convert grid position to pixels (without zoom - zoom is applied via CSS transform)
+  const baseGridUnit = window.innerWidth / gridSize
+  const left = widget.position.x * baseGridUnit
+  const top = widget.position.y * baseGridUnit
+  const width = widget.size.width * baseGridUnit
+  const height = widget.size.height * baseGridUnit
 
   const handleDelete = () => {
     if (confirm('Delete this widget?')) {

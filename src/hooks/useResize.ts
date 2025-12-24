@@ -38,9 +38,10 @@ export function useResize(widgetId: string) {
       const deltaX = e.clientX - resizeStartRef.current.x
       const deltaY = e.clientY - resizeStartRef.current.y
 
-      // Convert pixel delta to grid coordinates
-      const gridDeltaX = pixelsToGrid(deltaX, gridSize, zoom)
-      const gridDeltaY = pixelsToGrid(deltaY, gridSize, zoom)
+      // Convert pixel delta to grid coordinates (accounting for zoom in the transform)
+      const baseGridUnit = window.innerWidth / gridSize
+      const gridDeltaX = deltaX / baseGridUnit / zoom
+      const gridDeltaY = deltaY / baseGridUnit / zoom
 
       const newSize = {
         width: Math.max(

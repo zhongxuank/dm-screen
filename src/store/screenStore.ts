@@ -65,15 +65,22 @@ export const useScreenStore = create<ScreenState>()(
       },
 
       setViewport: (viewport: Viewport) => {
-        set({ viewport })
+        // Constrain to top-left: only allow scrolling down and right
+        set({
+          viewport: {
+            x: Math.max(0, viewport.x),
+            y: Math.max(0, viewport.y),
+          },
+        })
       },
 
       updateViewport: (deltaX: number, deltaY: number) => {
         const { viewport } = get()
+        // Constrain to top-left: only allow scrolling down and right
         set({
           viewport: {
-            x: viewport.x + deltaX,
-            y: viewport.y + deltaY,
+            x: Math.max(0, viewport.x + deltaX),
+            y: Math.max(0, viewport.y + deltaY),
           },
         })
       },

@@ -34,9 +34,10 @@ export function useDragAndDrop(widgetId: string) {
       const deltaX = e.clientX - dragStartRef.current.x
       const deltaY = e.clientY - dragStartRef.current.y
 
-      // Convert pixel delta to grid coordinates
-      const gridDeltaX = pixelsToGrid(deltaX, gridSize, zoom)
-      const gridDeltaY = pixelsToGrid(deltaY, gridSize, zoom)
+      // Convert pixel delta to grid coordinates (accounting for zoom in the transform)
+      const baseGridUnit = window.innerWidth / gridSize
+      const gridDeltaX = deltaX / baseGridUnit / zoom
+      const gridDeltaY = deltaY / baseGridUnit / zoom
 
       const newPosition = {
         x: widgetStartPosRef.current.x + gridDeltaX,

@@ -20,9 +20,9 @@ export function GridContainer({ children }: GridContainerProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
 
-  // Calculate canvas size based on widget positions
+  // Calculate canvas size based on widget positions (in grid units)
   useEffect(() => {
-    const bounds = calculateCanvasBounds(widgets, gridSize, zoom)
+    const bounds = calculateCanvasBounds(widgets, gridSize, 1) // Use zoom=1 for grid calculations
     const canvasWidth = Math.max(
       gridSize,
       bounds.maxX - bounds.minX + gridSize
@@ -32,19 +32,17 @@ export function GridContainer({ children }: GridContainerProps) {
       bounds.maxY - bounds.minY + gridSize
     )
     setCanvasSize({ width: canvasWidth, height: canvasHeight })
-  }, [widgets, gridSize, zoom, setCanvasSize])
+  }, [widgets, gridSize, setCanvasSize])
 
-  const canvasBounds = calculateCanvasBounds(widgets, gridSize, zoom)
-  const canvasWidth = gridToPixels(
-    Math.max(gridSize, canvasBounds.maxX - canvasBounds.minX + gridSize),
-    gridSize,
-    zoom
-  )
-  const canvasHeight = gridToPixels(
-    Math.max(gridSize, canvasBounds.maxY - canvasBounds.minY + gridSize),
-    gridSize,
-    zoom
-  )
+  // Calculate canvas size in base pixels (zoom applied via transform)
+  const baseGridUnit = window.innerWidth / gridSize
+  const canvasBounds = calculateCanvasBounds(widgets, gridSize, 1) // Use zoom=1 for calculations
+  const canvasWidth =
+    Math.max(gridSize, canvasBounds.maxX - canvasBounds.minX + gridSize) *
+    baseGridUnit
+  const canvasHeight =
+    Math.max(gridSize, canvasBounds.maxY - canvasBounds.minY + gridSize) *
+    baseGridUnit
 
   // Handle pan/scroll with mouse drag
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -61,9 +59,12 @@ export function GridContainer({ children }: GridContainerProps) {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (isDragging) {
+      const newX = e.clientX - dragStart.x
+      const newY = e.clientY - dragStart.y
+      // Constrain to top-left: only allow scrolling down and right (non-negative)
       setViewport({
-        x: e.clientX - dragStart.x,
-        y: e.clientY - dragStart.y,
+        x: Math.max(0, newX),
+        y: Math.max(0, newY),
       })
     }
   }
@@ -75,16 +76,18 @@ export function GridContainer({ children }: GridContainerProps) {
   // Handle wheel scrolling
   const handleWheel = (e: React.WheelEvent) => {
     if (e.shiftKey) {
-      // Horizontal scroll
+      // Horizontal scroll (only right)
+      const newX = viewport.x - e.deltaY
       setViewport({
-        x: viewport.x - e.deltaY,
+        x: Math.max(0, newX), // Constrain to non-negative
         y: viewport.y,
       })
     } else {
-      // Vertical scroll
+      // Vertical scroll (only down)
+      const newY = viewport.y - e.deltaY
       setViewport({
         x: viewport.x,
-        y: viewport.y - e.deltaY,
+        y: Math.max(0, newY), // Constrain to non-negative
       })
     }
     e.preventDefault()
@@ -132,11 +135,12 @@ function GridOverlay({
   gridSize: number
   zoom: number
 }) {
-  const gridUnit = getGridUnitSize(gridSize, zoom)
+  // Base grid unit (zoom applied via CSS transform)
+  const baseGridUnit = window.innerWidth / gridSize
   const gridLines: JSX.Element[] = []
 
   // Generate grid lines (optimize: only render visible ones)
-  const maxLines = Math.ceil(window.innerWidth / gridUnit) + 10
+  const maxLines = Math.ceil(window.innerWidth / baseGridUnit) + 10
   for (let i = 0; i <= maxLines; i++) {
     gridLines.push(
       <div
@@ -144,7 +148,7 @@ function GridOverlay({
         className="grid-line vertical"
         style={{
           position: 'absolute',
-          left: `${i * gridUnit}px`,
+          left: `${i * baseGridUnit}px`,
           top: 0,
           width: '1px',
           height: '100%',
@@ -159,7 +163,7 @@ function GridOverlay({
         className="grid-line horizontal"
         style={{
           position: 'absolute',
-          top: `${i * gridUnit}px`,
+          top: `${i * baseGridUnit}px`,
           left: 0,
           height: '1px',
           width: '100%',
