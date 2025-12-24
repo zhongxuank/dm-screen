@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BaseWidget } from './BaseWidget'
 import { useScreenStore } from '@/store/screenStore'
+import { gridToPixels } from '@/utils/grid'
 import type { Widget, TogglesWidgetData } from '@/types'
 
 interface TogglesWidgetProps {
@@ -8,11 +9,17 @@ interface TogglesWidgetProps {
 }
 
 export function TogglesWidget({ widget }: TogglesWidgetProps) {
-  const { mode, updateWidget } = useScreenStore()
+  const { mode, updateWidget, gridSize, zoom } = useScreenStore()
   const data = widget.data as TogglesWidgetData
   const [isEditing, setIsEditing] = useState(false)
   const [editCount, setEditCount] = useState(data.count)
   const [editStyle, setEditStyle] = useState(data.style)
+
+  // Calculate container dimensions in pixels
+  const containerWidth = gridToPixels(widget.size.width, gridSize, 1)
+  const containerHeight = gridToPixels(widget.size.height, gridSize, 1)
+  const headerHeight = (window.innerWidth / gridSize) / 2 // Half grid unit
+  const availableHeight = containerHeight - headerHeight - 16 // Subtract header and padding
 
   const handleSave = () => {
     const newToggles = Array(editCount).fill(false)
@@ -102,43 +109,61 @@ export function TogglesWidget({ widget }: TogglesWidgetProps) {
             className="toggles-display"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(2rem, 1fr))',
-              gap: '0.5rem',
-              padding: '0.5rem',
+              gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${Math.max(1.5, Math.sqrt(data.toggles.length))}rem), 1fr))`,
+              gap: '0.25rem',
+              padding: '0.25rem',
+              height: '100%',
+              alignContent: 'start',
             }}
           >
-            {data.toggles.map((toggled, index) => (
-              <button
-                key={index}
-                onClick={() => handleToggle(index)}
-                disabled={mode === 'edit'}
-                style={{
-                  aspectRatio: '1',
-                  backgroundColor: toggled
-                    ? widget.style.borderColor
-                    : 'rgba(0, 0, 0, 0.2)',
-                  border: `2px solid ${widget.style.borderColor}`,
-                  borderRadius: data.style === 'circle' ? '50%' : '4px',
-                  cursor: mode === 'edit' ? 'default' : 'pointer',
-                  transition: 'all 0.2s',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: widget.style.textColor,
-                  fontSize: '0.875rem',
-                }}
-                onMouseEnter={(e) => {
-                  if (mode !== 'edit') {
-                    e.currentTarget.style.opacity = '0.8'
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '1'
-                }}
-              >
-                {toggled ? '✓' : ''}
-              </button>
-            ))}
+            {data.toggles.map((toggled, index) => {
+              // Calculate optimal size based on container and number of toggles
+              const cols = Math.ceil(Math.sqrt(data.toggles.length))
+              const rows = Math.ceil(data.toggles.length / cols)
+              const gap = 4 // 0.25rem = 4px
+              const padding = 8 // 0.25rem = 4px on each side
+              const maxWidth = (containerWidth - padding * 2 - gap * (cols - 1)) / cols
+              const maxHeight = (availableHeight - gap * (rows - 1)) / rows
+              const toggleSizePx = Math.max(20, Math.min(maxWidth, maxHeight, 40)) // Between 20px and 40px
+              const toggleSizeRem = toggleSizePx / 16 // Convert to rem
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleToggle(index)}
+                  disabled={mode === 'edit'}
+                  style={{
+                    width: `${toggleSizePx}px`,
+                    height: `${toggleSizePx}px`,
+                    minWidth: '20px',
+                    minHeight: '20px',
+                    backgroundColor: toggled
+                      ? widget.style.borderColor
+                      : 'rgba(0, 0, 0, 0.2)',
+                    border: `2px solid ${widget.style.borderColor}`,
+                    borderRadius: data.style === 'circle' ? '50%' : '4px',
+                    cursor: mode === 'edit' ? 'default' : 'pointer',
+                    transition: 'all 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: widget.style.textColor,
+                    fontSize: `${toggleSizeRem * 0.4}rem`,
+                    margin: 'auto',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (mode !== 'edit') {
+                      e.currentTarget.style.opacity = '0.8'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.opacity = '1'
+                  }}
+                >
+                  {toggled ? '✓' : ''}
+                </button>
+              )
+            })}
           </div>
         )}
       </div>

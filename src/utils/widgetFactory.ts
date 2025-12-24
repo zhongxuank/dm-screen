@@ -31,7 +31,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
   const baseWidget: Omit<Widget, 'type' | 'data'> = {
     id: generateId(),
     position: { x: 5, y: 5 }, // Default position near top-left
-    size: { width: 6, height: 4 }, // Default size in grid units
+    size: { width: 8, height: 6 }, // Default size in grid units (larger for visibility)
     style: getDefaultStyle(),
     zIndex: 1,
   }
@@ -41,6 +41,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'text',
+        size: { width: 10, height: 8 }, // Larger for markdown content
         data: {
           content: '# Text Widget\n\nAdd your markdown content here.',
         } as TextWidgetData,
@@ -50,6 +51,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'notepad',
+        size: { width: 10, height: 8 }, // Larger for text editing
         data: {
           content: '',
         } as NotepadWidgetData,
@@ -59,7 +61,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'image',
-        size: { width: 8, height: 6 }, // Larger default for images
+        size: { width: 10, height: 8 }, // Larger default for images
         data: {
           url: '',
           scale: 1,
@@ -70,7 +72,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'countdown',
-        size: { width: 4, height: 3 },
+        size: { width: 6, height: 5 }, // Larger to show title and controls
         data: {
           title: 'Countdown',
           value: 0,
@@ -82,7 +84,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'fraction',
-        size: { width: 4, height: 3 },
+        size: { width: 6, height: 5 }, // Larger to show title and controls
         data: {
           title: 'HP',
           current: 10,
@@ -94,7 +96,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'toggles',
-        size: { width: 6, height: 4 },
+        size: { width: 8, height: 6 }, // Larger for toggle grid
         data: {
           count: 5,
           toggles: Array(5).fill(false),
@@ -106,7 +108,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'todos',
-        size: { width: 6, height: 5 },
+        size: { width: 10, height: 8 }, // Larger for task list
         data: {
           items: [
             { id: generateId(), text: 'Task 1', completed: false },
@@ -119,7 +121,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'pages',
-        size: { width: 8, height: 6 },
+        size: { width: 10, height: 8 }, // Larger for page content
         data: {
           pages: [
             {
@@ -135,7 +137,7 @@ export function createDefaultWidget(type: WidgetType): Widget {
       return {
         ...baseWidget,
         type: 'character',
-        size: { width: 10, height: 8 },
+        size: { width: 12, height: 10 }, // Larger for character container
         data: {
           name: 'Character',
           iconColor: '#4a9eff',

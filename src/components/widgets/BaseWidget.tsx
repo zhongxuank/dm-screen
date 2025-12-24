@@ -81,38 +81,23 @@ export function BaseWidget({ widget, children, onEdit }: BaseWidgetProps) {
         overflow: 'hidden',
       }}
     >
-      {/* Permanent thin header bar */}
+      {/* Permanent thin header bar - half grid size */}
       <div
         className={`widget-header ${isEditMode ? 'editable' : ''}`}
         {...(isEditMode ? dragHandlers : {})}
         style={{
-          height: '24px',
-          minHeight: '24px',
+          height: `${baseGridUnit / 2}px`,
+          minHeight: `${baseGridUnit / 2}px`,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0 0.5rem',
+          justifyContent: 'flex-end',
+          padding: '0 0.25rem',
           backgroundColor: 'rgba(0, 0, 0, 0.2)',
           borderBottom: `1px solid ${widget.style.borderColor}`,
           cursor: isEditMode ? 'move' : 'default',
           userSelect: 'none',
         }}
       >
-        <div
-          className="widget-title"
-          style={{
-            fontSize: '0.7rem',
-            textTransform: 'uppercase',
-            color: widget.style.textColor,
-            opacity: 0.7,
-            flex: 1,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {widget.type}
-        </div>
         {isEditMode && (
           <div className="widget-menu-container" ref={menuRef}>
             <button
@@ -126,15 +111,16 @@ export function BaseWidget({ widget, children, onEdit }: BaseWidgetProps) {
                 border: 'none',
                 color: widget.style.textColor,
                 cursor: 'pointer',
-                padding: '0.25rem',
-                fontSize: '1rem',
+                padding: '0.125rem 0.25rem',
+                fontSize: '0.875rem',
                 opacity: 0.7,
                 display: 'flex',
                 alignItems: 'center',
+                lineHeight: 1,
               }}
               aria-label="Widget options"
             >
-              ⋮
+              ⋯
             </button>
             {showMenu && (
               <div
