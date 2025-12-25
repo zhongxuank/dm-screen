@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { BaseWidget } from './BaseWidget'
 import { useScreenStore } from '@/store/screenStore'
-import { WidgetFactory } from './WidgetFactory'
 import { createDefaultWidget } from '@/utils/widgetFactory'
+import { NestedWidgetRenderer } from './NestedWidgetRenderer'
 import type { Widget, CharacterWidgetData } from '@/types'
 
 interface CharacterWidgetProps {
@@ -30,12 +30,8 @@ export function CharacterWidget({ widget }: CharacterWidgetProps) {
 
   const handleAddWidget = (type: any) => {
     const newWidget = createDefaultWidget(type)
-    // Position nested widget relative to character widget
-    newWidget.position = {
-      x: widget.position.x + 1,
-      y: widget.position.y + 1,
-    }
-    newWidget.zIndex = widget.zIndex + 1
+    // Position doesn't matter for nested widgets (they're relative to container)
+    // Keep default position but it won't be used for absolute positioning
 
     const updatedData = {
       ...data,
@@ -192,11 +188,14 @@ export function CharacterWidget({ widget }: CharacterWidgetProps) {
 
             {/* Nested widgets */}
             {!data.collapsed && (
-              <div className="character-nested-widgets">
-                {mode === 'edit' && (
+              <div className="character-nested-widgets" style={{ position: 'relative', minHeight: '100px' }}>
+                {mode === 'edit' && !isEditing && (
                   <div style={{ position: 'relative', marginBottom: '0.5rem' }}>
                     <button
-                      onClick={() => setShowAddMenu(!showAddMenu)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setShowAddMenu(!showAddMenu)
+                      }}
                       style={{
                         width: '100%',
                         padding: '0.5rem',
@@ -221,16 +220,20 @@ export function CharacterWidget({ widget }: CharacterWidgetProps) {
                           borderRadius: '4px',
                           padding: '0.5rem',
                           marginTop: '0.25rem',
-                          zIndex: 1000,
+                          zIndex: 10000,
                           maxHeight: '200px',
                           overflowY: 'auto',
                         }}
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        {['text', 'notepad', 'countdown', 'fraction', 'toggles', 'todos'].map(
+                        {['text', 'notepad', 'image', 'countdown', 'fraction', 'toggles', 'todos', 'pages'].map(
                           (type) => (
                             <button
                               key={type}
-                              onClick={() => handleAddWidget(type as any)}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                handleAddWidget(type as any)
+                              }}
                               style={{
                                 width: '100%',
                                 padding: '0.5rem',
@@ -259,14 +262,19 @@ export function CharacterWidget({ widget }: CharacterWidgetProps) {
                       padding: '1rem',
                     }}
                   >
-                    {mode === 'edit' ? 'No widgets. Click "Add Widget" to add.' : 'No widgets'}
+                    {mode === 'edit' && !isEditing ? 'No widgets. Click "Add Widget" to add.' : 'No widgets'}
                   </div>
                 ) : (
-                  <div>
-                    {data.widgets.map((nestedWidget) => (
-                      <div key={nestedWidget.id} style={{ marginBottom: '0.5rem' }}>
-                        <WidgetFactory widget={nestedWidget} />
-                      </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    {data.widgets.map((nestedWidget, index) => (
+                      <NestedWidgetRenderer
+                        key={nestedWidget.id}
+                        widget={nestedWidget}
+                        characterWidget={widget}
+                        index={index}
+                        onUpdate={(updates) => handleUpdateNestedWidget(nestedWidget.id, updates)}
+                        onDelete={() => handleDeleteNestedWidget(nestedWidget.id)}
+                      />
                     ))}
                   </div>
                 )}
